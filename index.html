@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pertahanan Diri Suku Melayu</title>
+    <style>
+        /* Matikan scrollbar pada window luar iframe */
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            /* Mencegah scrollbar ganda dari body */
+            background-color: transparent;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Kartu utama yang memegang scrollbar tunggal */
+        .gallery-container {
+            max-width: 400px;
+            height: 100vh;
+            /* Mengisi penuh tinggi iframe Lapentor */
+            box-sizing: border-box;
+            margin: 0 auto;
+            text-align: center;
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            /* Memunculkan HANYA SATU scrollbar internal jika teks panjang */
+        }
+
+        .slide-title {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .image-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-wrapper img {
+            width: 100%;
+            max-width: 356px;
+            border-radius: 8px;
+            object-fit: cover;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .btn-nav {
+            position: absolute;
+            background-color: rgba(211, 84, 0, 0.85);
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+            z-index: 10;
+        }
+
+        .btn-nav:hover {
+            background-color: rgba(160, 64, 0, 1);
+        }
+
+        .prev {
+            left: 5px;
+        }
+
+        .next {
+            right: 5px;
+        }
+
+        .slide-desc {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 15px;
+            line-height: 1.5;
+            text-align: justify;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="gallery-container">
+        <!-- Judul akan berubah otomatis -->
+        <div class="slide-title" id="judul-hewan">Memuat...</div>
+
+        <div class="image-wrapper">
+            <!-- Tombol Before / Prev -->
+            <button class="btn-nav prev" id="btn-prev" onclick="gantiSlide(-1)">&#10094;</button>
+
+            <!-- Gambar utama -->
+            <img id="gambar-hewan" src="" alt="Koleksi Museum">
+
+            <!-- Tombol Next -->
+            <button class="btn-nav next" id="btn-next" onclick="gantiSlide(1)">&#10095;</button>
+        </div>
+
+        <!-- Keterangan akan berubah otomatis -->
+        <div class="slide-desc" id="keterangan-hewan">Memuat keterangan...</div>
+    </div>
+
+    <script>
+        // 1. Tempat lu masukin Judul, Link Gambar, dan Keterangan
+        // Cukup edit teks di dalam tanda kutip ini aja ya
+        const koleksiData = [
+            {
+                judul: "Tombak dan Perisai",
+                gambar: "Tombak_dan_perisai.jpg",
+                keterangan: `Mata tombak terbuat dari besi baja, bentuk pipih panjang dan berujung lancip, pada bagian pangkalnya dilapisi dengan plat kuningan. Gagang terbuat dari kayu keras yang diukir berbentuk menyerupai sisik ular. Tutup mata tombak terbuat dari kayu diukir motif ular dan diberi cat warna merah dan kuning keemasan. Digunakan sebagai senjata pertahanan diri saat berperang dan sebagai simbol keperkasaan bagi pemiliknya. Ukuran : P 192 cm.
+
+                            Sedangkan Perisai terbuat dari tembaga, bentuk bulat. Pada permukaan bagian tengah terdapat sebuah tonjolan seperti stupa yang diatasnya ditancapkan lima buah besi tajam., dibawahnya dihiasi motif pinggir awan, garis-garis melingkat dan motif suluran yang membentuk motif pinggir awan. Pada bagian pinggir perisai terdapat sederet rangkaian motif tumpal, sedangkan bagian belakang terdapat pegangan.`
+            },
+            {
+                judul: "Mata Tombak dan Keris",
+                gambar: "Mata_Tombak_dan_Keris.jpg",
+                keterangan: `Mata Tombak terbuat dari besi baja, bentuk pipih panjang dan berunjung lancip/runcing. Tutup mata tombak terbuat dari kayu yang diukir dengan motif mahkota warna hitam, kuning keemasan dan merah, tanpa hulu. Ukuran : P = 42 cm L = 45 cm
+
+                            Bilah terbuat dari besi baja berbentuk lurus panjang, tipis dan runcing berpamor pejaten. Hulu/gagang terbuat dari kayu berbentuk kepala burung yang digayakan. Pertemuan antara hulu dan bilah diperindah dengan gading dan balutan perak. Sarung terbuat dari kayu berwarna merah dan coklat. Keris ini digunakan sebagai pelengkap busana resmi dan juga dipakai sebagai senjata pertahanan diri. Berasal dari Surakarta. Ukuran : P =45,7 cm L = 2,3 cm`
+            },
+            {
+                judul: "Rencong dan Badik",
+                gambar: "Rencong_dan_Badik.jpg",
+                keterangan: `Rencong Terbuat dari besi baja berbentuk pipih panjang, bagian mata agak melengkung dan berujung lancip. Hulu/gagang terbuat dari kayu berbentuk bulat, begitu juga sarungnya terbuat dari kayu yang diperkuat dengan plat-plat kuningan. Digunakan sebagai senjata pertahanan diri. Berasal dari Aceh. Ukuran : P = 40 cm L = 30 cm
+                
+                            Badik Terbuat dari besi baja, bentuk pipih panjang berujung lancip. Hulu/gagang terbuat dari kayu melengkung seperti kepala burung. Sarung terbuat dari kayu bentuk pipih panjang warna coklat kehitaman yang diperkuat dengan plat-plat kuningan. Digunakan sebagai senjata pertahanan diri. Berasal dari Sulawesi. Ukuran : P = 28 cm`
+            },
+            {
+                judul: "Golok",
+                gambar: "Golok.jpg",
+                keterangan: "Bilat terbuat dari besi baja yang ditempa berbentuk pipih panjang seperti parang berujung lancip. Hulu/gagang terbuat dari kayu melengkung seperti kepala burung, sedangkan sarung terbuat dari kayu. Digunakan sebagai senjata pertahanan diri. Berasal dari Sulawesi"
+            }
+        ];
+
+        let indexSekarang = 0;
+
+        // Ambil elemen HTML yang akan dimanipulasi
+        const elemenJudul = document.getElementById('judul-hewan');
+        const elemenGambar = document.getElementById('gambar-hewan');
+        const elemenKeterangan = document.getElementById('keterangan-hewan');
+        const btnPrev = document.getElementById('btn-prev');
+        const btnNext = document.getElementById('btn-next');
+
+        function updateTampilan() {
+            // Ganti konten sesuai data array
+            elemenJudul.innerText = koleksiData[indexSekarang].judul;
+            elemenGambar.src = koleksiData[indexSekarang].gambar;
+            elemenKeterangan.innerText = koleksiData[indexSekarang].keterangan;
+
+            // Logika sesuai revisi dosen:
+            // Sembunyikan tombol Prev jika sedang di gambar urutan pertama (index 0)
+            if (indexSekarang === 0) {
+                btnPrev.style.display = 'none';
+            } else {
+                btnPrev.style.display = 'flex';
+            }
+
+            // Sembunyikan tombol Next jika sedang di gambar urutan terakhir
+            if (indexSekarang === koleksiData.length - 1) {
+                btnNext.style.display = 'none';
+            } else {
+                btnNext.style.display = 'flex';
+            }
+        }
+
+        function gantiSlide(arah) {
+            indexSekarang += arah;
+            updateTampilan();
+        }
+
+        // Jalankan fungsi saat web pertama kali dirender
+        updateTampilan();
+    </script>
+
+</body>
+
+</html>
